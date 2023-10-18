@@ -18,7 +18,7 @@ export default Splash = ({ navigation }) => {
         className="text-3xl text-white my-4"
         style={{ fontFamily: "poppins-bold" }}
       >
-        Ward Finder
+        Ward Tracker
       </Text>
     </SafeAreaView>
   );
