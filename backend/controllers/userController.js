@@ -1,4 +1,5 @@
 import asyncHandler from "express-async-handler"
+import User from "../models/userModel.js"
 
 
 // @desc auth user / set token
@@ -13,6 +14,8 @@ const authUser = asyncHandler(async (request, response) => {
 // @access PUBLIC
 
 const registerUser = asyncHandler(async (request, response) => {
+  const { name, email, password } = request.body
+  console.log(name)
   response.status(200).json({ message: "Register user" })
 })
 
