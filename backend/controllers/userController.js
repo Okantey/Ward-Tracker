@@ -28,7 +28,7 @@ const authUser = asyncHandler(async (request, response) => {
 // @access PUBLIC
 
 const registerUser = asyncHandler(async (request, response) => {
-  const { name, email, password } = request.body;
+  const { name, email, password, role } = request.body;
   const userExists = await User.findOne({ email });
   if (userExists) {
     response.status(400);
@@ -38,6 +38,7 @@ const registerUser = asyncHandler(async (request, response) => {
     name,
     email,
     password,
+    role
   });
 
   if (user) {
@@ -46,6 +47,7 @@ const registerUser = asyncHandler(async (request, response) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      role: user.role,
       token,
     });
   } else {
