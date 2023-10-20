@@ -31,7 +31,7 @@ const registerUser = asyncHandler(async (request, response) => {
     response.status(400)
     throw new Error("Invalid user data")
   }
-  response.status(200).json({ message: "Register user" })
+
 })
 
 // @desc logout user
