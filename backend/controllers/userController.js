@@ -1,18 +1,16 @@
 import asyncHandler from "express-async-handler"
 import User from "../models/userModel.js"
 import generateToken from "../utils/generateToken.js"
+
 // @desc auth user / set token
 //route POST api/users/auth
 // @access PUBLIC
 
 const authUser = asyncHandler(async (request, response) => {
   const { email, password } = request.body;
-
   const user = await User.findOne({ email });
-
   if (user && (await user.matchPassword(password))) {
     const token = generateToken(user._id);
-
     response.json({
       _id: user._id,
       name: user.name,
@@ -65,14 +63,12 @@ const logoutUser = (request, response) => {
   response.status(200).json({ message: 'Logged out successfully' });
 };
 
-
 // @desc get user profile
 //route GET api/users/profile
 // @access PRIVATE
 
 const getUserProfile = asyncHandler(async (request, response) => {
   const user = await User.findById(request.user._id);
-
   if (user) {
     response.json({
       _id: user._id,
