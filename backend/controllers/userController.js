@@ -1,8 +1,6 @@
 import asyncHandler from "express-async-handler"
 import User from "../models/userModel.js"
 import generateToken from "../utils/generateToken.js"
-
-
 // @desc auth user / set token
 //route POST api/users/auth
 // @access PUBLIC
@@ -72,11 +70,49 @@ const logoutUser = (request, response) => {
 // @access PRIVATE
 
 const getUserProfile = asyncHandler(async (request, response) => {
-  response.status(200).json({ message: "Get user profile" })
-})
+  const user = await User.findById(request.user._id);
+
+  if (user) {
+    response.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+    });
+  } else {
+    response.status(404);
+    throw new Error('User not found');
+  }
+});
+
+// @desc    Update user profile
+// @route   PUT /api/users/profile
+// @access  Private
+const updateUserProfile = asyncHandler(async (request, response) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    user.name = request.body.name || user.name;
+    user.email = request.body.email || user.email;
+
+    if (request.body.password) {
+      user.password = request.body.password;
+    }
+
+    const updatedUser = await user.save();
+
+    response.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
 
 
 
 
 
-export { authUser, registerUser, logoutUser, getUserProfile }
+export { authUser, registerUser, logoutUser, getUserProfile, updateUserProfile }
