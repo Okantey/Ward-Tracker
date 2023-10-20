@@ -11,18 +11,20 @@ const authUser = asyncHandler(async (request, response) => {
   const user = await User.findOne({ email });
 
   if (user && (await user.matchPassword(password))) {
-    generateToken(response, user._id);
+    const token = generateToken(user._id);
 
     response.json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      token,
     });
   } else {
     response.status(401);
     throw new Error('Invalid email or password');
   }
 });
+
 // @desc register user
 //route POST api/users/register
 // @access PUBLIC
@@ -41,11 +43,12 @@ const registerUser = asyncHandler(async (request, response) => {
   });
 
   if (user) {
-    generateToken(response, user._id);
+    const token = generateToken(user._id);
     response.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      token,
     });
   } else {
     response.status(400);
@@ -53,17 +56,15 @@ const registerUser = asyncHandler(async (request, response) => {
   }
 });
 
+
 // @desc logout user
 //route POST api/users/logout
 // @access PUBLIC
 
 const logoutUser = (request, response) => {
-  response.cookie('jwt', '', {
-    httpOnly: true,
-    expires: new Date(0),
-  });
   response.status(200).json({ message: 'Logged out successfully' });
 };
+
 
 // @desc get user profile
 //route GET api/users/profile
@@ -88,7 +89,7 @@ const getUserProfile = asyncHandler(async (request, response) => {
 // @route   PUT /api/users/profile
 // @access  Private
 const updateUserProfile = asyncHandler(async (request, response) => {
-  const user = await User.findById(req.user._id);
+  const user = await User.findById(request.user._id);
 
   if (user) {
     user.name = request.body.name || user.name;
@@ -106,7 +107,7 @@ const updateUserProfile = asyncHandler(async (request, response) => {
       email: updatedUser.email,
     });
   } else {
-    res.status(404);
+    response.status(404);
     throw new Error('User not found');
   }
 });
