@@ -1,12 +1,14 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Splash, Login } from "../screens";
+import { Splash, Register, Home } from "../screens";
 const Stack = createNativeStackNavigator();
 
 const MainStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Splash" component={Splash} />
-      <Stack.Screen name="Main" component={HomeStack} />
+      <Stack.Screen name="RegisterStack" component={RegisterStack} />
+      <Stack.Screen name="AuthStack" component={AuthStack} />
+      <Stack.Screen name="Home" component={Home} />
     </Stack.Navigator>
   );
 };
@@ -21,7 +23,7 @@ const AuthStack = () => {
 
 const RegisterStack = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Register" component={Register} />
     </Stack.Navigator>
   );
