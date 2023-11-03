@@ -6,7 +6,7 @@ import child from "../../assets/images/student_.png";
 import * as Location from "expo-location";
 import { FontAwesome5 } from "@expo/vector-icons";
 
-export default Home = () => {
+export default ParentScreen = () => {
   const [userLocation, setUserLocation] = useState({
     latitude: 37.78825,
     longitude: -122.4324,

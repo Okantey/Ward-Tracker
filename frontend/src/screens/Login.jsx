@@ -10,22 +10,21 @@ import {
 } from "react-native";
 import { Header, Button } from "../components";
 
-export default Register = ({ navigation }) => {
+export default Login = ({ navigation }) => {
   const radioButtonsData = [
     {
-      id: "yes",
+      id: "child",
       label: "child",
       selected: true,
     },
     {
-      id: "no",
+      id: "parent",
       label: "parent",
       selected: false,
     },
   ];
 
-  const [selectedRadioButton, setSelectedRadioButton] = useState("yes"); // Default selection
-  const [name, setName] = useState("");
+  const [selectedRadioButton, setSelectedRadioButton] = useState("child"); // Default selection
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [indicator, setIndicator] = useState(false);
@@ -33,30 +32,30 @@ export default Register = ({ navigation }) => {
   const handleRadioButtonPress = (id) => {
     setSelectedRadioButton(id);
   };
+
+  console.log(selectedRadioButton);
+
+  const handleSubmit = async () => {
+    setIndicator(true);
+    try {
+      if (selectedRadioButton === "parent") {
+        navigation.navigate("ParentScreen");
+      } else {
+        navigation.navigate("WardScreen");
+      }
+    } catch (err) {
+      console.log(err.message);
+    } finally {
+      setIndicator(false);
+    }
+  };
   return (
     <SafeAreaView className="flex-1 px-4 bg-white">
       <Header />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={{ fontFamily: "poppins-bold" }} className="text-2xl">
-          Welcome Back!
+          Log into your account
         </Text>
-        <Text style={{ fontFamily: "poppins-medium" }} className="text-lg my-4">
-          We need to verify a few details to get you up and running
-        </Text>
-
-        <View className="w-full">
-          <Text
-            style={{ fontFamily: "poppins-bold" }}
-            className="text-lg py-1 pt-4"
-          >
-            Full Name
-          </Text>
-          <TextInput
-            value={name}
-            onChangeText={(text) => setName(text)}
-            className="border border-gray w-full p-4 rounded-xl text-base shadow"
-          />
-        </View>
         <View className="w-full">
           <Text
             style={{ fontFamily: "poppins-bold" }}
@@ -136,20 +135,21 @@ export default Register = ({ navigation }) => {
             </TouchableOpacity>
           ))}
         </View>
+
         <View className="my-6">
-          <Button name="REGISTER" onPress={() => navigation.navigate("Home")} />
+          <Button name="LOGIN" onPress={handleSubmit} />
         </View>
         <Text
           className="text-center text-lg"
           style={{ fontFamily: "poppins-regular" }}
         >
-          Already have an account?{" "}
+          Not a member?{" "}
           <Text
-            onPress={() => navigation.navigate("AuthStack")}
+            onPress={() => navigation.navigate("RegisterStack")}
             style={{ fontFamily: "poppins-bold" }}
             className="text-primary"
           >
-            Login
+            Create new account.
           </Text>
         </Text>
       </ScrollView>

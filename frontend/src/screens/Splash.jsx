@@ -6,7 +6,7 @@ import { useEffect } from "react";
 export default Splash = ({ navigation }) => {
   useEffect(() => {
     setTimeout(() => {
-      navigation.navigate("RegisterStack");
+      navigation.navigate("AuthStack");
     }, 2000);
   }, []);
   return (
