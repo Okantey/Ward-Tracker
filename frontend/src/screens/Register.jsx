@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   Text,
@@ -9,29 +9,55 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Header, Button } from "../components";
+import Axios from "../api/Axios";
+import { AppContext } from "../context/AppContext";
 
 export default Register = ({ navigation }) => {
+  const { setToken } = useContext(AppContext);
   const radioButtonsData = [
     {
-      id: "yes",
+      id: "child",
       label: "child",
       selected: true,
     },
     {
-      id: "no",
+      id: "parent",
       label: "parent",
       selected: false,
     },
   ];
 
-  const [selectedRadioButton, setSelectedRadioButton] = useState("yes"); // Default selection
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [selectedRadioButton, setSelectedRadioButton] = useState("child");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [indicator, setIndicator] = useState(false);
+  const REGISTER_URL = "/auth/register";
 
   const handleRadioButtonPress = (id) => {
     setSelectedRadioButton(id);
+  };
+
+  const handleSubmit = async () => {
+    setIndicator(true);
+    try {
+      const response = await Axios.post(REGISTER_URL, {
+        username: username,
+        email: email,
+        password: password,
+        role: selectedRadioButton,
+      });
+      if (response.status === 200) {
+        const fetchedData = await response.data;
+        console.log(fetchedData);
+      } else {
+        console.log("Response status is not 200");
+      }
+    } catch (err) {
+      console.log(err.stack);
+    } finally {
+      setIndicator(false);
+    }
   };
   return (
     <SafeAreaView className="flex-1 px-4 bg-white">
@@ -43,17 +69,16 @@ export default Register = ({ navigation }) => {
         <Text style={{ fontFamily: "poppins-medium" }} className="text-lg my-4">
           We need to verify a few details to get you up and running
         </Text>
-
         <View className="w-full">
           <Text
             style={{ fontFamily: "poppins-bold" }}
             className="text-lg py-1 pt-4"
           >
-            Full Name
+            Username
           </Text>
           <TextInput
-            value={name}
-            onChangeText={(text) => setName(text)}
+            value={username}
+            onChangeText={(text) => setUsername(text)}
             className="border border-gray w-full p-4 rounded-xl text-base shadow"
           />
         </View>
@@ -137,7 +162,17 @@ export default Register = ({ navigation }) => {
           ))}
         </View>
         <View className="my-6">
-          <Button name="REGISTER" onPress={() => navigation.navigate("Home")} />
+          <Button
+            role="submit"
+            name={
+              indicator ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                "CREATE NEW ACCOUNT"
+              )
+            }
+            onPress={handleSubmit}
+          />
         </View>
         <Text
           className="text-center text-lg"

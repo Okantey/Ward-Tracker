@@ -1,10 +1,10 @@
 import React from "react";
-import { TouchableOpacity, Text } from "react-native";
+import { Pressable, Text } from "react-native";
 
 export default Button = ({ name, onPress }) => {
   return (
-    <TouchableOpacity
-      className="w-full bg-primary p-3 rounded-md shadow-md"
+    <Pressable
+      className="w-full flex justify-center items-center bg-primary p-3 rounded-md shadow-md"
       onPress={onPress}
     >
       <Text
@@ -13,6 +13,6 @@ export default Button = ({ name, onPress }) => {
       >
         {name}
       </Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 };

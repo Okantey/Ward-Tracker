@@ -5,50 +5,38 @@ import {
   View,
   TextInput,
   ScrollView,
-  TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
 import { Header, Button } from "../components";
+import Axios from "../api/Axios";
 
 export default Login = ({ navigation }) => {
-  const radioButtonsData = [
-    {
-      id: "child",
-      label: "child",
-      selected: true,
-    },
-    {
-      id: "parent",
-      label: "parent",
-      selected: false,
-    },
-  ];
+  const LOGIN_URL = "/auth/login";
 
-  const [selectedRadioButton, setSelectedRadioButton] = useState("child"); // Default selection
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [indicator, setIndicator] = useState(false);
-
-  const handleRadioButtonPress = (id) => {
-    setSelectedRadioButton(id);
-  };
-
-  console.log(selectedRadioButton);
 
   const handleSubmit = async () => {
     setIndicator(true);
     try {
-      if (selectedRadioButton === "parent") {
-        navigation.navigate("ParentScreen");
+      const response = await Axios.post(LOGIN_URL, {
+        username: username,
+        password: password,
+      });
+      if (response.status === 200) {
+        const fetchedData = await response.data;
+        console.log(fetchedData);
       } else {
-        navigation.navigate("WardScreen");
+        console.log("Response status is not 200");
       }
     } catch (err) {
-      console.log(err.message);
+      console.log(err.stack);
     } finally {
       setIndicator(false);
     }
   };
+
   return (
     <SafeAreaView className="flex-1 px-4 bg-white">
       <Header />
@@ -61,12 +49,13 @@ export default Login = ({ navigation }) => {
             style={{ fontFamily: "poppins-bold" }}
             className="text-lg py-1 pt-4"
           >
-            Email
+            Username
           </Text>
           <TextInput
             className="border border-gray w-full p-4 rounded-xl text-base shadow"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
+            value={username}
+            autoFocus
+            onChangeText={(text) => setUsername(text)}
           />
         </View>
         <View className="w-full">
@@ -84,60 +73,19 @@ export default Login = ({ navigation }) => {
           />
         </View>
         {/* prompt */}
-        <Text
-          style={{ fontFamily: "poppins-bold" }}
-          className="text-lg py-1 pt-4"
-        >
-          What role do you play?
-        </Text>
-        <View style={{ flexDirection: "row", marginTop: 12 }}>
-          {radioButtonsData.map((radioButton) => (
-            <TouchableOpacity
-              key={radioButton.id}
-              onPress={() => handleRadioButtonPress(radioButton.id)}
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginRight: 24,
-              }}
-            >
-              <View
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 100,
-                  borderWidth: 2,
-                  borderColor:
-                    selectedRadioButton === radioButton.id ? "#4CE5B1" : "gray",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginRight: 10,
-                }}
-              >
-                {selectedRadioButton === radioButton.id && (
-                  <View
-                    style={{
-                      width: 18,
-                      height: 18,
-                      borderRadius: 100,
-                      backgroundColor: "#4CE5B1",
-                      borderColor: "#4CE5B1",
-                    }}
-                  />
-                )}
-              </View>
-              <Text
-                style={{ fontFamily: "poppins-medium" }}
-                className="text-lg"
-              >
-                {radioButton.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
 
         <View className="my-6">
-          <Button name="LOGIN" onPress={handleSubmit} />
+          <Button
+            role="submit"
+            name={
+              indicator ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                "LOGIN"
+              )
+            }
+            onPress={handleSubmit}
+          />
         </View>
         <Text
           className="text-center text-lg"
