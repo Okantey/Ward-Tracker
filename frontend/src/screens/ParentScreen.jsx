@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Marker } from "react-native-maps";
 import MapView from "react-native-maps";
+import { StatusBar } from "expo-status-bar";
 import {
   TextInput,
   View,
@@ -61,7 +62,6 @@ export default ParentScreen = () => {
           },
         }
       );
-
       const newLocation = response.data.data.location;
       const updatedLocation = {
         latitude: newLocation.latitude,

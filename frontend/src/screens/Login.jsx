@@ -7,6 +7,7 @@ import {
   ScrollView,
   ActivityIndicator,
 } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { Header, Button } from "../components";
 import Axios from "../api/Axios";
 import { AppContext } from "../context/AppContext";
@@ -46,6 +47,7 @@ export default Login = ({ navigation }) => {
 
   return (
     <SafeAreaView className="flex-1 px-4 bg-white">
+      <StatusBar style="auto" />
       <Header />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={{ fontFamily: "poppins-bold" }} className="text-2xl">

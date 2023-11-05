@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 import {
   Text,
   View,
@@ -65,6 +66,7 @@ export default Register = ({ navigation }) => {
   };
   return (
     <SafeAreaView className="flex-1 px-4 bg-white">
+      <StatusBar style="auto" />
       <Header />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={{ fontFamily: "poppins-bold" }} className="text-2xl">

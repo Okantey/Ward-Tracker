@@ -1,14 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Marker } from "react-native-maps";
 import MapView from "react-native-maps";
-import {
-  View,
-  Image,
-  Text,
-  TouchableOpacity,
-  Modal,
-  Clipboard,
-} from "react-native";
+import { View, Image, Text, TouchableOpacity, Modal } from "react-native";
 import child from "../../assets/images/student_.png";
 import * as Location from "expo-location";
 import Axios from "../api/Axios";
@@ -57,11 +50,6 @@ export default WardScreen = () => {
     }
   };
 
-  const handleCopyToClipboard = () => {
-    Clipboard.setString(uniqueID);
-    alert("Unique ID copied to clipboard!");
-  };
-
   useEffect(() => {
     handleUserLocation();
   }, []);
@@ -100,10 +88,7 @@ export default WardScreen = () => {
               {uniqueID}
             </Text>
             <View className="flex flex-row items-center">
-              <TouchableOpacity
-                onPress={handleCopyToClipboard}
-                className="my-2 mx-2 bg-primary py-2 px-4 rounded"
-              >
+              <TouchableOpacity className="my-2 mx-2 bg-primary py-2 px-4 rounded">
                 <Text
                   style={{
                     fontFamily: "poppins-bold",
