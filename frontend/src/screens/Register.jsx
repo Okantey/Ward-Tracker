@@ -13,26 +13,24 @@ import Axios from "../api/Axios";
 import { AppContext } from "../context/AppContext";
 
 export default Register = ({ navigation }) => {
-  const { setToken } = useContext(AppContext);
-  const radioButtonsData = [
-    {
-      id: "child",
-      label: "child",
-      selected: true,
-    },
-    {
-      id: "parent",
-      label: "parent",
-      selected: false,
-    },
-  ];
-
   const [selectedRadioButton, setSelectedRadioButton] = useState("child");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [indicator, setIndicator] = useState(false);
-  const REGISTER_URL = "/auth/register";
+  const REGISTER_URL = "/auth/register/";
+  const radioButtonsData = [
+    {
+      id: "child",
+
+      selected: true,
+    },
+    {
+      id: "parent",
+
+      selected: false,
+    },
+  ];
 
   const handleRadioButtonPress = (id) => {
     setSelectedRadioButton(id);
@@ -40,21 +38,27 @@ export default Register = ({ navigation }) => {
 
   const handleSubmit = async () => {
     setIndicator(true);
+    console.log(username, email, selectedRadioButton, password);
     try {
-      const response = await Axios.post(REGISTER_URL, {
-        username: username,
-        email: email,
-        password: password,
-        role: selectedRadioButton,
-      });
-      if (response.status === 200) {
-        const fetchedData = await response.data;
-        console.log(fetchedData);
-      } else {
-        console.log("Response status is not 200");
-      }
-    } catch (err) {
-      console.log(err.stack);
+      const response = await Axios.post(
+        REGISTER_URL,
+        {
+          username: username,
+          email: email,
+          role: selectedRadioButton,
+          password: password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const fetchedData = response.data;
+      console.log(fetchedData);
+      navigation.navigate("AuthStack");
+    } catch (error) {
+      console.log(error.response.data);
     } finally {
       setIndicator(false);
     }
@@ -156,7 +160,7 @@ export default Register = ({ navigation }) => {
                 style={{ fontFamily: "poppins-medium" }}
                 className="text-lg"
               >
-                {radioButton.label}
+                {radioButton.id}
               </Text>
             </TouchableOpacity>
           ))}

@@ -3,10 +3,10 @@ import { createContext, useState } from "react";
 const AppContext = createContext(null);
 
 const AppProvider = ({ children }) => {
-  const [token, setToken] = useState("");
+  const [userData, setUserData] = useState(null);
 
   return (
-    <AppContext.Provider value={{ token, setToken }}>
+    <AppContext.Provider value={{ userData, setUserData }}>
       {children}
     </AppContext.Provider>
   );

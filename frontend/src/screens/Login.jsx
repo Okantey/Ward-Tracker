@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   Text,
@@ -9,10 +9,11 @@ import {
 } from "react-native";
 import { Header, Button } from "../components";
 import Axios from "../api/Axios";
+import { AppContext } from "../context/AppContext";
 
 export default Login = ({ navigation }) => {
-  const LOGIN_URL = "/auth/login";
-
+  const { setUserData } = useContext(AppContext);
+  const LOGIN_URL = "/auth/login/";
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [indicator, setIndicator] = useState(false);
@@ -24,14 +25,17 @@ export default Login = ({ navigation }) => {
         username: username,
         password: password,
       });
-      if (response.status === 200) {
-        const fetchedData = await response.data;
-        console.log(fetchedData);
+      const fetchedData = response.data;
+      setUserData(fetchedData);
+      const role = fetchedData.data.role;
+      if (role === "child") {
+        navigation.navigate("WardScreen");
       } else {
-        console.log("Response status is not 200");
+        navigation.navigate("ParentScreen");
       }
+      console.log(fetchedData);
     } catch (err) {
-      console.log(err.stack);
+      console.log(err.message);
     } finally {
       setIndicator(false);
     }
