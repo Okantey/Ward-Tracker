@@ -3,10 +3,13 @@ import { createContext, useState } from "react";
 const AppContext = createContext(null);
 
 const AppProvider = ({ children }) => {
-  const [userData, setUserData] = useState(null);
+  const [childData, setChildData] = useState(null);
+  const [parentData, setParentData] = useState(null);
 
   return (
-    <AppContext.Provider value={{ userData, setUserData }}>
+    <AppContext.Provider
+      value={{ childData, setChildData, parentData, setParentData }}
+    >
       {children}
     </AppContext.Provider>
   );

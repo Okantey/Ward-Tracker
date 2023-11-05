@@ -1,12 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Marker } from "react-native-maps";
 import MapView from "react-native-maps";
-import { TextInput, View, Image, Text, TouchableOpacity } from "react-native";
+import {
+  TextInput,
+  View,
+  Image,
+  Text,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import child from "../../assets/images/student_.png";
 import * as Location from "expo-location";
 import { FontAwesome5 } from "@expo/vector-icons";
+import Axios from "../api/Axios";
+import { AppContext } from "../context/AppContext";
 
 export default ParentScreen = () => {
+  const PARENT_URL = "/parent/child/link/";
+  const [id, setId] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { parentData } = useContext(AppContext);
+  const token = parentData.token;
+
   const [userLocation, setUserLocation] = useState({
     latitude: 37.78825,
     longitude: -122.4324,
@@ -32,6 +47,38 @@ export default ParentScreen = () => {
     handleUserLocation();
   }, [userLocation]);
 
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    try {
+      const response = await Axios.post(
+        PARENT_URL,
+        {
+          unique_id: id,
+        },
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+
+      const newLocation = response.data.data.location;
+      const updatedLocation = {
+        latitude: newLocation.latitude,
+        longitude: newLocation.longitude,
+        latitudeDelta: newLocation.latitudeDelta,
+        longitudeDelta: newLocation.longitudeDelta,
+      };
+      setUserLocation(updatedLocation);
+      console.log(updatedLocation);
+      setId("");
+    } catch (error) {
+      console.log(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <View className="flex-1 relative">
       <MapView className="w-full h-full" region={userLocation}>
@@ -45,17 +92,27 @@ export default ParentScreen = () => {
           <TextInput
             placeholder="Enter ward ID number"
             className="ml-2 w-full"
+            value={id}
+            onChangeText={(text) => setId(text)}
             style={{ fontFamily: "poppins-regular" }}
           />
         </View>
-        <TouchableOpacity className=" w-full p-3 bg-primary rounded-xl shadow-md">
-          <Text
-            className="text-lg text-white text-center"
-            style={{ fontFamily: "poppins-bold" }}
-          >
-            Get Ward Location
-          </Text>
-        </TouchableOpacity>
+        <Pressable
+          onPress={handleSubmit}
+          role="button"
+          className=" w-full p-3 bg-primary rounded-xl shadow-md"
+        >
+          {!isLoading ? (
+            <Text
+              className="text-lg text-white text-center"
+              style={{ fontFamily: "poppins-bold" }}
+            >
+              Get Ward Location
+            </Text>
+          ) : (
+            <ActivityIndicator size="small" color="white" />
+          )}
+        </Pressable>
       </View>
     </View>
   );

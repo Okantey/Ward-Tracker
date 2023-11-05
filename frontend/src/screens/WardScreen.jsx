@@ -15,8 +15,8 @@ import Axios from "../api/Axios";
 import { AppContext } from "../context/AppContext";
 
 export default WardScreen = () => {
-  const { userData } = useContext(AppContext);
-  const token = userData.token;
+  const { childData } = useContext(AppContext);
+  const token = childData.token;
   const CHILD_URL = "/child/location/";
 
   const [userLocation, setUserLocation] = useState({
@@ -43,14 +43,18 @@ export default WardScreen = () => {
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
     });
-    const response = await Axios.post(CHILD_URL, userLocation, {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    });
-    const uniqueID = response.data.data.unique_id;
-    setUniqueID(uniqueID);
-    setModalVisible(true);
+    try {
+      const response = await Axios.post(CHILD_URL, userLocation, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
+      const uniqueID = response.data.data.unique_id;
+      setUniqueID(uniqueID);
+      setModalVisible(true);
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   const handleCopyToClipboard = () => {
@@ -71,7 +75,7 @@ export default WardScreen = () => {
       </MapView>
 
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {

@@ -12,7 +12,7 @@ import Axios from "../api/Axios";
 import { AppContext } from "../context/AppContext";
 
 export default Login = ({ navigation }) => {
-  const { setUserData } = useContext(AppContext);
+  const { setChildData, setParentData } = useContext(AppContext);
   const LOGIN_URL = "/auth/login/";
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -26,11 +26,14 @@ export default Login = ({ navigation }) => {
         password: password,
       });
       const fetchedData = response.data;
-      setUserData(fetchedData);
       const role = fetchedData.data.role;
+      setUsername("");
+      setPassword("");
       if (role === "child") {
+        setChildData(fetchedData);
         navigation.navigate("WardScreen");
       } else {
+        setParentData(fetchedData);
         navigation.navigate("ParentScreen");
       }
       console.log(fetchedData);
