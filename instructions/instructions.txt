@@ -1,0 +1,3 @@
+1. Navigate to the frontend in the terminal using "cd frontend"
+2. In the terminal type "yarn install" and press enter
+3. Wait for the packages to install and type "npx expo start" to run your app
